@@ -1,0 +1,165 @@
+.text-columns-with-image {
+  padding-top: var(--tc-padding-top, 28px);
+  padding-bottom: var(--tc-padding-bottom, 28px);
+  background-color: var(--tc-bg);
+  color: var(--tc-text);
+}
+
+.text-columns-with-image[data-divider="true"] {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.text-columns-with-image__container {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+.text-columns-with-image[data-full-width="true"] .text-columns-with-image__container {
+  max-width: none;
+  padding-inline: 0;
+}
+
+.text-columns-with-image__header {
+  text-align: var(--tc-heading-align, center);
+  margin-bottom: 32px;
+}
+
+.text-columns-with-image__heading {
+  font-size: calc(1em * var(--tc-heading-size, 1));
+  color: var(--tc-heading);
+}
+
+.text-columns-with-image__highlight[data-marker="underline"] {
+  text-decoration: underline;
+  text-decoration-color: var(--tc-highlight, currentColor);
+  text-underline-offset: 0.15em;
+}
+
+.text-columns-with-image__subheading,
+.text-columns-with-image__text {
+  color: var(--tc-text);
+}
+
+.text-columns-with-image__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--tc-columns-desktop, 4), 1fr);
+  gap: var(--tc-gap-desktop, 28px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.text-columns-with-image__grid[data-carousel-desktop="true"] {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.text-columns-with-image__grid[data-carousel-desktop="true"]::-webkit-scrollbar {
+  display: none;
+}
+
+.text-columns-with-image__grid[data-carousel-desktop="true"] > .text-columns-with-image__column {
+  flex: 0 0 calc((100% - (var(--tc-columns-desktop, 4) - 1) * var(--tc-gap-desktop, 28px)) / var(--tc-columns-desktop, 4));
+  scroll-snap-align: start;
+}
+
+@media screen and (max-width: 749px) {
+  .text-columns-with-image {
+    padding-top: var(--tc-padding-top-mobile, 20px);
+    padding-bottom: var(--tc-padding-bottom-mobile, 20px);
+  }
+
+  .text-columns-with-image__grid {
+    grid-template-columns: repeat(var(--tc-columns-mobile, 1), 1fr);
+    gap: var(--tc-gap-mobile, 16px);
+  }
+
+  .text-columns-with-image__grid[data-swipe-mobile="true"] {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .text-columns-with-image__grid[data-swipe-mobile="true"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  .text-columns-with-image__grid[data-swipe-mobile="true"] > .text-columns-with-image__column {
+    flex: 0 0 calc((100% - (var(--tc-columns-mobile, 1) - 1) * var(--tc-gap-mobile, 16px)) / var(--tc-columns-mobile, 1));
+    scroll-snap-align: start;
+  }
+}
+
+.text-columns-with-image__column {
+  display: flex;
+  flex-direction: column;
+  text-align: var(--tc-column-align, center);
+  background-color: var(--tc-column-bg, transparent);
+}
+
+.text-columns-with-image__column[data-image-position="bottom"] {
+  flex-direction: column-reverse;
+}
+
+.text-columns-with-image__image-wrapper {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.text-columns-with-image__image-wrapper[data-image-style="landscape"] {
+  aspect-ratio: 4 / 3;
+}
+
+.text-columns-with-image__image-wrapper[data-image-style="portrait"] {
+  aspect-ratio: 3 / 4;
+}
+
+.text-columns-with-image__image-wrapper[data-image-style="square"] {
+  aspect-ratio: 1 / 1;
+}
+
+.text-columns-with-image__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.text-columns-with-image__image-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.text-columns-with-image__column-body {
+  padding: 16px;
+}
+
+.text-columns-with-image__column-heading {
+  margin: 0 0 8px;
+}
+
+.text-columns-with-image__column-text {
+  margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .text-columns-with-image {
+    background-color: var(--tc-bg-dark, var(--tc-bg));
+    color: var(--tc-text-dark, var(--tc-text));
+  }
+
+  .text-columns-with-image__heading {
+    color: var(--tc-heading-dark, var(--tc-heading));
+  }
+
+  .text-columns-with-image__highlight[data-marker="underline"] {
+    text-decoration-color: var(--tc-highlight-dark, var(--tc-highlight, currentColor));
+  }
+}

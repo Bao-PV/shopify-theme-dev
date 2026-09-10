@@ -1,0 +1,123 @@
+{%- comment -%}
+  Renders the "Text columns with image" section content.
+  Shared by sections/text-columns-with-image.liquid and
+  sections/text-columns-with-image-header.liquid so both keep identical
+  visual output while differing only in schema (enabled_on / limit).
+{%- endcomment -%}
+
+{{ 'text-columns-with-image.css' | asset_url | stylesheet_tag }}
+
+{%- assign s = section.settings -%}
+
+{%- comment -%} Turn "[highlighted]" in the heading into a styled span. {%- endcomment -%}
+{%- assign heading_parts = s.heading | split: '[' -%}
+{%- assign heading_html = heading_parts[0] -%}
+{%- for part in heading_parts offset: 1 -%}
+  {%- assign sub_parts = part | split: ']' -%}
+  {%- assign highlighted_text = sub_parts[0] -%}
+  {%- assign remainder = part | remove_first: highlighted_text | remove_first: ']' -%}
+  {%- capture heading_html -%}
+    {{ heading_html }}<span class="text-columns-with-image__highlight" data-marker="{{ s.heading_marker }}">{{ highlighted_text }}</span>{{ remainder }}
+  {%- endcapture -%}
+{%- endfor -%}
+
+<div
+  class="text-columns-with-image color-{{ section.id }}"
+  data-full-width="{{ s.full_width_desktop }}"
+  data-divider="{{ s.show_divider_desktop }}"
+  style="
+    --tc-padding-top: {{ s.padding_top_desktop }}px;
+    --tc-padding-bottom: {{ s.padding_bottom_desktop }}px;
+    --tc-padding-top-mobile: {{ s.padding_top_mobile }}px;
+    --tc-padding-bottom-mobile: {{ s.padding_bottom_mobile }}px;
+    --tc-heading-align: {{ s.heading_alignment }};
+    --tc-heading-size: {{ s.heading_size | divided_by: 100.0 }};
+    --tc-column-align: {{ s.column_content_alignment }};
+    --tc-columns-desktop: {{ s.columns_desktop }};
+    --tc-columns-mobile: {{ s.columns_mobile }};
+    --tc-gap-desktop: {{ s.block_spacing_desktop }}px;
+    --tc-gap-mobile: {{ s.block_spacing_mobile }}px;
+    {%- if s.background_color_light %}--tc-bg: {{ s.background_color_light }};{% endif %}
+    {%- if s.background_color_dark %}--tc-bg-dark: {{ s.background_color_dark }};{% endif %}
+    {%- if s.heading_color_light %}--tc-heading: {{ s.heading_color_light }};{% endif %}
+    {%- if s.heading_color_dark %}--tc-heading-dark: {{ s.heading_color_dark }};{% endif %}
+    {%- if s.text_color_light %}--tc-text: {{ s.text_color_light }};{% endif %}
+    {%- if s.text_color_dark %}--tc-text-dark: {{ s.text_color_dark }};{% endif %}
+    {%- if s.heading_highlight_color_light %}--tc-highlight: {{ s.heading_highlight_color_light }};{% endif %}
+    {%- if s.heading_highlight_color_dark %}--tc-highlight-dark: {{ s.heading_highlight_color_dark }};{% endif %}
+    {%- if s.secondary_background == 'column_background' %}--tc-column-bg: rgba(0, 0, 0, 0.03);{% endif %}
+  "
+>
+  <div class="text-columns-with-image__container">
+    {%- if s.heading != blank or s.subheading != blank or s.text != blank -%}
+      <div class="text-columns-with-image__header">
+        {%- if s.heading != blank -%}
+          {%- case s.heading_tag -%}
+            {%- when 'h1' -%}
+              <h1 class="text-columns-with-image__heading">{{ heading_html }}</h1>
+            {%- when 'h3' -%}
+              <h3 class="text-columns-with-image__heading">{{ heading_html }}</h3>
+            {%- else -%}
+              <h2 class="text-columns-with-image__heading">{{ heading_html }}</h2>
+          {%- endcase -%}
+        {%- endif -%}
+
+        {%- if s.subheading != blank -%}
+          <div class="text-columns-with-image__subheading">{{ s.subheading }}</div>
+        {%- endif -%}
+
+        {%- if s.text != blank -%}
+          <div class="text-columns-with-image__text">{{ s.text }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div
+      class="text-columns-with-image__grid"
+      data-carousel-desktop="{{ s.enable_carousel_desktop }}"
+      data-swipe-mobile="{{ s.enable_swipe_mobile }}"
+      {%- if s.enable_autoplay and s.enable_carousel_desktop or s.enable_autoplay and s.enable_swipe_mobile %}
+        data-text-columns-autoplay="true"
+      {%- endif %}
+    >
+      {%- for block in section.blocks -%}
+        <div
+          class="text-columns-with-image__column"
+          data-image-position="{{ s.image_position_desktop }}"
+          {{ block.shopify_attributes }}
+        >
+          <div class="text-columns-with-image__image-wrapper" data-image-style="{{ s.image_style }}">
+            {%- if block.settings.image -%}
+              <img
+                class="text-columns-with-image__image"
+                src="{{ block.settings.image | image_url: width: 800 }}"
+                alt="{{ block.settings.image.alt | escape }}"
+                loading="lazy"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+              >
+            {%- else -%}
+              <div class="text-columns-with-image__image-placeholder">
+                {{ 'image' | placeholder_svg_tag: 'text-columns-with-image__image' }}
+              </div>
+            {%- endif -%}
+          </div>
+
+          <div class="text-columns-with-image__column-body">
+            {%- if block.settings.heading != blank -%}
+              <h3 class="text-columns-with-image__column-heading">{{ block.settings.heading }}</h3>
+            {%- endif -%}
+
+            {%- if block.settings.text != blank -%}
+              <div class="text-columns-with-image__column-text">{{ block.settings.text }}</div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{%- if s.enable_autoplay -%}
+  <script src="{{ 'text-columns-with-image.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
