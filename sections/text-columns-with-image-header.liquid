@@ -160,9 +160,25 @@
     },
     {
       "type": "checkbox",
+      "id": "enable_arrows_mobile",
+      "label": "Enable next/previous arrow on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
       "id": "enable_autoplay",
       "label": "Enable auto-play",
       "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Change slide every",
+      "default": 5
     },
     {
       "type": "header",
@@ -304,9 +320,21 @@
       "name": "Column",
       "settings": [
         {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Image priority: Product > Collection > Image below."
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
           "type": "image_picker",
           "id": "image",
-          "label": "Image"
+          "label": "Image",
+          "info": "Used only when no Product or Collection is selected above."
         },
         {
           "type": "text",

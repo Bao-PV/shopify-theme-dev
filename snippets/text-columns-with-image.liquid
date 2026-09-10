@@ -21,6 +21,14 @@
   {%- endcapture -%}
 {%- endfor -%}
 
+{%- assign is_carousel_desktop = s.enable_carousel_desktop -%}
+{%- assign is_carousel_mobile = s.enable_swipe_mobile -%}
+{%- assign show_arrows_mobile = false -%}
+{%- if is_carousel_mobile and s.enable_arrows_mobile -%}
+  {%- assign show_arrows_mobile = true -%}
+{%- endif -%}
+{%- assign autoplay_ms = s.autoplay_speed | times: 1000 -%}
+
 <div
   class="text-columns-with-image color-{{ section.id }}"
   data-full-width="{{ s.full_width_desktop }}"
@@ -72,52 +80,83 @@
       </div>
     {%- endif -%}
 
-    <div
-      class="text-columns-with-image__grid"
-      data-carousel-desktop="{{ s.enable_carousel_desktop }}"
-      data-swipe-mobile="{{ s.enable_swipe_mobile }}"
-      {%- if s.enable_autoplay and s.enable_carousel_desktop or s.enable_autoplay and s.enable_swipe_mobile %}
-        data-text-columns-autoplay="true"
-      {%- endif %}
-    >
-      {%- for block in section.blocks -%}
-        <div
-          class="text-columns-with-image__column"
-          data-image-position="{{ s.image_position_desktop }}"
-          {{ block.shopify_attributes }}
-        >
-          <div class="text-columns-with-image__image-wrapper" data-image-style="{{ s.image_style }}">
-            {%- if block.settings.image -%}
-              <img
-                class="text-columns-with-image__image"
-                src="{{ block.settings.image | image_url: width: 800 }}"
-                alt="{{ block.settings.image.alt | escape }}"
-                loading="lazy"
-                width="{{ block.settings.image.width }}"
-                height="{{ block.settings.image.height }}"
-              >
-            {%- else -%}
-              <div class="text-columns-with-image__image-placeholder">
-                {{ 'image' | placeholder_svg_tag: 'text-columns-with-image__image' }}
-              </div>
-            {%- endif -%}
-          </div>
+    <div class="text-columns-with-image__viewport">
+      {%- if show_arrows_mobile -%}
+        <button
+          type="button"
+          class="text-columns-with-image__arrow text-columns-with-image__arrow--prev"
+          data-text-columns-prev
+          aria-label="Previous"
+        >&#8249;</button>
+      {%- endif -%}
 
-          <div class="text-columns-with-image__column-body">
-            {%- if block.settings.heading != blank -%}
-              <h3 class="text-columns-with-image__column-heading">{{ block.settings.heading }}</h3>
-            {%- endif -%}
+      <div
+        class="text-columns-with-image__grid"
+        data-carousel-desktop="{{ is_carousel_desktop }}"
+        data-swipe-mobile="{{ is_carousel_mobile }}"
+        {%- if s.enable_autoplay and is_carousel_desktop or s.enable_autoplay and is_carousel_mobile %}
+          data-text-columns-autoplay="true"
+          data-autoplay-interval="{{ autoplay_ms }}"
+        {%- endif %}
+      >
+        {%- for block in section.blocks -%}
+          {%- comment -%} Image priority: Product > Collection > manually picked Image. {%- endcomment -%}
+          {%- assign column_image = nil -%}
+          {%- if block.settings.product != blank and block.settings.product.featured_image != blank -%}
+            {%- assign column_image = block.settings.product.featured_image -%}
+          {%- elsif block.settings.collection != blank and block.settings.collection.image != blank -%}
+            {%- assign column_image = block.settings.collection.image -%}
+          {%- elsif block.settings.image != blank -%}
+            {%- assign column_image = block.settings.image -%}
+          {%- endif -%}
 
-            {%- if block.settings.text != blank -%}
-              <div class="text-columns-with-image__column-text">{{ block.settings.text }}</div>
-            {%- endif -%}
+          <div
+            class="text-columns-with-image__column"
+            data-image-position="{{ s.image_position_desktop }}"
+            {{ block.shopify_attributes }}
+          >
+            <div class="text-columns-with-image__image-wrapper" data-image-style="{{ s.image_style }}">
+              {%- if column_image -%}
+                <img
+                  class="text-columns-with-image__image"
+                  src="{{ column_image | image_url: width: 800 }}"
+                  alt="{{ column_image.alt | escape }}"
+                  loading="lazy"
+                  width="{{ column_image.width }}"
+                  height="{{ column_image.height }}"
+                >
+              {%- else -%}
+                <div class="text-columns-with-image__image-placeholder">
+                  {{ 'image' | placeholder_svg_tag: 'text-columns-with-image__image' }}
+                </div>
+              {%- endif -%}
+            </div>
+
+            <div class="text-columns-with-image__column-body">
+              {%- if block.settings.heading != blank -%}
+                <h3 class="text-columns-with-image__column-heading">{{ block.settings.heading }}</h3>
+              {%- endif -%}
+
+              {%- if block.settings.text != blank -%}
+                <div class="text-columns-with-image__column-text">{{ block.settings.text }}</div>
+              {%- endif -%}
+            </div>
           </div>
-        </div>
-      {%- endfor -%}
+        {%- endfor -%}
+      </div>
+
+      {%- if show_arrows_mobile -%}
+        <button
+          type="button"
+          class="text-columns-with-image__arrow text-columns-with-image__arrow--next"
+          data-text-columns-next
+          aria-label="Next"
+        >&#8250;</button>
+      {%- endif -%}
     </div>
   </div>
 </div>
 
-{%- if s.enable_autoplay -%}
+{%- if s.enable_autoplay or show_arrows_mobile -%}
   <script src="{{ 'text-columns-with-image.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}

@@ -94,6 +94,43 @@
   }
 }
 
+.text-columns-with-image__viewport {
+  position: relative;
+}
+
+.text-columns-with-image__arrow {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .text-columns-with-image__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .text-columns-with-image__arrow--prev {
+    left: 4px;
+  }
+
+  .text-columns-with-image__arrow--next {
+    right: 4px;
+  }
+}
+
 .text-columns-with-image__column {
   display: flex;
   flex-direction: column;
