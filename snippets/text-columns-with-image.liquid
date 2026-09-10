@@ -28,6 +28,7 @@
   {%- assign show_arrows_mobile = true -%}
 {%- endif -%}
 {%- assign autoplay_ms = s.autoplay_speed | times: 1000 -%}
+{%- assign has_atc_block = false -%}
 
 <div
   class="text-columns-with-image color-{{ section.id }}"
@@ -140,6 +141,42 @@
               {%- if block.settings.text != blank -%}
                 <div class="text-columns-with-image__column-text">{{ block.settings.text }}</div>
               {%- endif -%}
+
+              {%- if block.settings.product != blank -%}
+                {%- assign atc_product = block.settings.product -%}
+                {%- if atc_product.has_only_default_variant -%}
+                  {%- assign has_atc_block = true -%}
+                  {%- assign atc_variant = atc_product.selected_or_first_available_variant -%}
+                  <div class="text-columns-with-image__atc" data-atc-wrapper>
+                    <form
+                      class="text-columns-with-image__atc-form"
+                      data-atc-form
+                      action="{{ routes.cart_add_url }}"
+                      method="post"
+                      enctype="multipart/form-data"
+                    >
+                      <input type="hidden" name="id" value="{{ atc_variant.id }}">
+                      <input type="hidden" name="quantity" value="1">
+                      <button
+                        type="submit"
+                        class="text-columns-with-image__atc-button"
+                        {%- unless atc_variant.available %} disabled{% endunless %}
+                      >
+                        {%- if atc_variant.available -%}
+                          Add to cart
+                        {%- else -%}
+                          Sold out
+                        {%- endif -%}
+                      </button>
+                    </form>
+                    <div class="text-columns-with-image__atc-message" data-atc-message role="alert" hidden></div>
+                  </div>
+                {%- else -%}
+                  <a class="text-columns-with-image__atc-link" href="{{ atc_product.url }}">
+                    View product
+                  </a>
+                {%- endif -%}
+              {%- endif -%}
             </div>
           </div>
         {%- endfor -%}
@@ -159,4 +196,8 @@
 
 {%- if s.enable_autoplay or show_arrows_mobile -%}
   <script src="{{ 'text-columns-with-image.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- if has_atc_block -%}
+  <script src="{{ 'text-columns-with-image-atc.js' | asset_url }}" defer="defer"></script>
 {%- endif -%}

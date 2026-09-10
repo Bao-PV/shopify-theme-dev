@@ -186,6 +186,40 @@
   margin: 0;
 }
 
+.text-columns-with-image__atc {
+  margin-top: 12px;
+}
+
+.text-columns-with-image__atc-button,
+.text-columns-with-image__atc-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.text-columns-with-image__atc-button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.text-columns-with-image__atc-message {
+  margin-top: 8px;
+  color: #d02e2e;
+  font-size: 0.875em;
+}
+
+.text-columns-with-image__atc-message[hidden] {
+  display: none;
+}
+
 @media (prefers-color-scheme: dark) {
   .text-columns-with-image {
     background-color: var(--tc-bg-dark, var(--tc-bg));
