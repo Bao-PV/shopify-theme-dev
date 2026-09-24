@@ -87,7 +87,7 @@
           type="button"
           class="text-columns-with-image__arrow text-columns-with-image__arrow--prev"
           data-text-columns-prev
-          aria-label="Previous"
+          aria-label="{{ 'sections.text_columns_with_image.previous_slide' | t | escape }}"
         >&#8249;</button>
       {%- endif -%}
 
@@ -147,7 +147,12 @@
                 {%- if atc_product.has_only_default_variant -%}
                   {%- assign has_atc_block = true -%}
                   {%- assign atc_variant = atc_product.selected_or_first_available_variant -%}
-                  <div class="text-columns-with-image__atc" data-atc-wrapper>
+                  <div
+                    class="text-columns-with-image__atc"
+                    data-atc-wrapper
+                    data-atc-error-message="{{ 'sections.text_columns_with_image.add_to_cart_error' | t | escape }}"
+                    data-atc-generic-error="{{ 'sections.text_columns_with_image.generic_error' | t | escape }}"
+                  >
                     <form
                       class="text-columns-with-image__atc-form"
                       data-atc-form
@@ -163,9 +168,9 @@
                         {%- unless atc_variant.available %} disabled{% endunless %}
                       >
                         {%- if atc_variant.available -%}
-                          Add to cart
+                          {{ 'sections.text_columns_with_image.add_to_cart' | t }}
                         {%- else -%}
-                          Sold out
+                          {{ 'sections.text_columns_with_image.sold_out' | t }}
                         {%- endif -%}
                       </button>
                     </form>
@@ -173,7 +178,7 @@
                   </div>
                 {%- else -%}
                   <a class="text-columns-with-image__atc-link" href="{{ atc_product.url }}">
-                    View product
+                    {{ 'sections.text_columns_with_image.view_product' | t }}
                   </a>
                 {%- endif -%}
               {%- endif -%}
@@ -187,7 +192,7 @@
           type="button"
           class="text-columns-with-image__arrow text-columns-with-image__arrow--next"
           data-text-columns-next
-          aria-label="Next"
+          aria-label="{{ 'sections.text_columns_with_image.next_slide' | t | escape }}"
         >&#8250;</button>
       {%- endif -%}
     </div>

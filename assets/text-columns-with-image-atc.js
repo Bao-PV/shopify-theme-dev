@@ -23,6 +23,8 @@ if (!window.textColumnsWithImageAtcBound) {
     const wrapper = form.closest('[data-atc-wrapper]');
     const messageEl = wrapper ? wrapper.querySelector('[data-atc-message]') : null;
     const button = form.querySelector('button[type="submit"]');
+    const addToCartErrorMessage = (wrapper && wrapper.dataset.atcErrorMessage) || 'Unable to add this product to the cart.';
+    const genericErrorMessage = (wrapper && wrapper.dataset.atcGenericError) || 'Something went wrong. Please try again.';
 
     if (messageEl) {
       messageEl.hidden = true;
@@ -42,7 +44,7 @@ if (!window.textColumnsWithImageAtcBound) {
       .then((response) => response.json().then((data) => ({ ok: response.ok, data })))
       .then(({ ok, data }) => {
         if (!ok) {
-          throw new Error(data.description || data.message || 'Unable to add this product to the cart.');
+          throw new Error(data.description || data.message || addToCartErrorMessage);
         }
 
         return textColumnsWithImageFetchCart();
@@ -52,7 +54,7 @@ if (!window.textColumnsWithImageAtcBound) {
       })
       .catch((error) => {
         if (messageEl) {
-          messageEl.textContent = error.message || 'Something went wrong. Please try again.';
+          messageEl.textContent = error.message || genericErrorMessage;
           messageEl.hidden = false;
         }
       })

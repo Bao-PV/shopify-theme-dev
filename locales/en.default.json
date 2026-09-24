@@ -48,5 +48,16 @@
     "submit": "Search",
     "no_results_html": "No results found for {{ terms }}",
     "results_for_html": "{{ count }} results found for {{ terms }}"
+  },
+  "sections": {
+    "text_columns_with_image": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "view_product": "View product",
+      "add_to_cart_error": "Unable to add this product to the cart.",
+      "generic_error": "Something went wrong. Please try again.",
+      "previous_slide": "Previous",
+      "next_slide": "Next"
+    }
   }
 }
